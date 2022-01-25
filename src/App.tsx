@@ -1,5 +1,4 @@
 import React from 'react';
-import GithubCorner from 'react-github-corner';
 import './App.scss';
 
 import { animationDuration, gridGap } from './config';
@@ -7,6 +6,7 @@ import Header from './components/Header';
 import Board from './components/Board';
 import Info from './components/Info';
 import BoardSizePicker from './components/BoardSizePicker';
+import { WalletButton } from './components/Wallet';
 
 const App: React.FC = () => {
   return (
@@ -19,9 +19,17 @@ const App: React.FC = () => {
         } as any
       }
     >
-      <GithubCorner href="https://github.com/mat-sz/2048" />
       <div className="page">
         <Header />
+        <div
+          style={{
+            marginBottom: '1.5em',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <WalletButton />
+        </div>
         <Board />
         <BoardSizePicker />
         <Info />
