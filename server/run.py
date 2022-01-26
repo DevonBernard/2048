@@ -53,6 +53,36 @@ def get_user_nfts():
 
     return user_nft_resp_json
 
+# Send an NFT to a user's wallet
+@app.route('/nfts/award', methods=['POST'])
+def award_nft():
+    address = request.json['address']
+
+    if address not in accounts:
+        return jsonify({'success':False, 'error': 'Account not found'}), 422
+
+    # Load available tenant NFTs
+    tenant_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(tenant_auth_token))
+    tenant_nft_resp_json = tenant_nft_resp.json()
+    tenant_nft = None
+    if 'success' in tenant_nft_resp_json:
+        tenant_nft = tenant_nft_resp_json['result'][0]
+    
+    # Transfer tenant NFT to user
+    transfer_payload = {
+        "coin": "SOL",
+        "nftId": str(tenant_nft['id']),
+        "method": "sol",
+        "address": accounts[address]['depositAddress']
+    }
+    transfer_nft_resp = requests.post(f'{target}/wallet/withdrawals', json=transfer_payload, headers=_create_header(tenant_auth_token))
+    transfer_nft_resp_json = transfer_nft_resp.json()
+
+    if 'success' in transfer_nft_resp_json:
+        return jsonify({'success': True}), 200
+
+    return jsonify({'success': False, 'error': 'Failed to award NFT to user'}), 422
+
 def _create_header(token):
     return {
         'Content-Type': 'application/json',
