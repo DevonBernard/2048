@@ -6,7 +6,6 @@ import Board from '../components/Board';
 import { apiCall } from '../utils/network';
 
 import BoardSizePicker from '../components/BoardSizePicker';
-import { WalletButton } from '../components/Wallet';
 import { PowerUp } from '../components/PowerUp';
 
 const powerUpLibrary = {
@@ -89,17 +88,32 @@ export const GamePage: React.FC = () => {
   return (
     <div>
       <Header />
-      <div
-        style={{
-          marginBottom: '1.5em',
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <WalletButton />
-      </div>
       <Board powerUps={powerUps} />
       <BoardSizePicker />
+      <h2>Give me NFT</h2>
+      <div className="size-picker">
+        <button
+          onClick={evt => {
+            requestNft('red');
+          }}
+        >
+          Red
+        </button>
+        <button
+          onClick={evt => {
+            requestNft('blue');
+          }}
+        >
+          Blue
+        </button>
+        <button
+          onClick={evt => {
+            requestNft('green');
+          }}
+        >
+          Green
+        </button>
+      </div>
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
         {powerUpLibrary.colors.map(powerUp => (

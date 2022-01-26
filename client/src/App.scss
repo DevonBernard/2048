@@ -52,9 +52,23 @@ button {
   padding: 2rem 0;
   font-size: 1.1rem;
 
+  .account-info {
+    display: flex;
+    flex-direction: column;
+
+    .wallet-adapter-dropdown {
+      display: flex;
+    }
+    .wallet-adapter-button {
+      display: flex;
+      justify-content: center !important;
+      flex-grow: 1;
+    }
+  }
+
   &-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
 
     button {
@@ -68,6 +82,7 @@ button {
 
   &-scores {
     display: flex;
+    margin: 0.2em 0 1em auto;
 
     &-score {
       position: relative;

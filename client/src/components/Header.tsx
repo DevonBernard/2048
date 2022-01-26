@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetAction, undoAction } from '../actions';
 import { StateType } from '../reducers';
+import { WalletButton } from '../components/Wallet';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -17,32 +18,29 @@ const Header: React.FC = () => {
   return (
     <div className="header">
       <div className="header-row">
-        <h1>2048</h1>
-        <div className="header-scores">
-          <div className="header-scores-score">
-            <div>Score</div>
-            <div>{score}</div>
-            {!!scoreIncrease && (
-              <div className="header-scores-score-increase" key={moveId}>
-                +{scoreIncrease}
-              </div>
-            )}
-          </div>
-          <div className="header-scores-score">
-            <div>Best</div>
-            <div>{best}</div>
-          </div>
-        </div>
-      </div>
-      <div className="header-row">
         <div>
-          Join the numbers and get to the <strong>2048 tile!</strong>
+          <div style={{ fontSize: 50, fontWeight: 'bold' }}>2048:FTX</div>
+          <div className="header-buttons">
+            <button onClick={reset}>New game</button>
+          </div>
         </div>
-        <div className="header-buttons">
-          <button onClick={undo} disabled={!previousBoard}>
-            Undo
-          </button>
-          <button onClick={reset}>New game</button>
+        <div className="account-info">
+          <WalletButton />
+          <div className="header-scores">
+            <div className="header-scores-score">
+              <div>Score</div>
+              <div>{score}</div>
+              {!!scoreIncrease && (
+                <div className="header-scores-score-increase" key={moveId}>
+                  +{scoreIncrease}
+                </div>
+              )}
+            </div>
+            <div className="header-scores-score">
+              <div>Best</div>
+              <div>{best}</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
