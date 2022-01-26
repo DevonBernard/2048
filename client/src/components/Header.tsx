@@ -1,12 +1,15 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useWallet } from '@solana/wallet-adapter-react';
+
 import { resetAction, undoAction } from '../actions';
 import { StateType } from '../reducers';
 import { WalletButton } from '../components/Wallet';
+import { apiCall } from '../utils/network';
 
 const Header: React.FC = () => {
   const dispatch = useDispatch();
-  const reset = useCallback(() => dispatch(resetAction()), [dispatch]);
+  const { publicKey } = useWallet();
   const undo = useCallback(() => dispatch(undoAction()), [dispatch]);
 
   const score = useSelector((state: StateType) => state.score);
@@ -14,6 +17,13 @@ const Header: React.FC = () => {
   const moveId = useSelector((state: StateType) => state.moveId);
   const best = useSelector((state: StateType) => state.best);
   const previousBoard = useSelector((state: StateType) => state.previousBoard);
+
+  const reset = useCallback(() => {
+    if (score === best) {
+      apiCall('POST', '/highscores', { address: publicKey, highScore: best });
+    }
+    dispatch(resetAction());
+  }, [dispatch, score, best]);
 
   return (
     <div className="header">

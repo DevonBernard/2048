@@ -99,6 +99,23 @@ def award_nft():
 
     return jsonify({'success': False, 'error': 'Failed to award NFT to user'}), 422
 
+
+# Login or create account for user
+@app.route('/highscores', methods=['POST'])
+def update_highscore():
+    address = request.json['address']
+    highscore = request.json['highScore']
+
+    if address in accounts:
+        account = accounts[address]
+        if highscore > account['highScore']:
+            account['highScore'] = highscore
+            with open('accounts.json', 'w') as accounts_file:
+                json.dump(accounts, accounts_file)
+        return jsonify({'success':True, 'result': {'highScore': account['highScore']}}), 200
+
+    return jsonify({'success':False, 'error': 'Account not found'}), 200
+
 def _create_header(token):
     return {
         'Content-Type': 'application/json',

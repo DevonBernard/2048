@@ -42,7 +42,6 @@ export const GamePage: React.FC = () => {
     if (publicKey) {
       apiCall('POST', '/auth', { address: publicKey }).then(authResp => {
         if (authResp.respJson.success) {
-          console.log(authResp.respJson.result);
           if (authResp.respJson.result.highScore) {
             dispatch(setBestScore(authResp.respJson.result.highScore));
           }
