@@ -73,7 +73,7 @@ export const GamePage: React.FC = () => {
       >
         <WalletButton />
       </div>
-      <Board />
+      <Board powerUps={powerUps} />
       <BoardSizePicker />
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>

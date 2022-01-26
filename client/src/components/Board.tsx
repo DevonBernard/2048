@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import classNames from 'classnames';
 
 import { StateType } from '../reducers';
 import { Direction } from '../types/Direction';
@@ -11,7 +12,7 @@ import { moveAction } from '../actions';
 import BoardTile from './BoardTile';
 import Overlay from './Overlay';
 
-const Board: React.FC = () => {
+const Board: any = ({ powerUps }: { powerUps: any }) => {
   const dispatch = useDispatch();
   const board = useSelector((state: StateType) => state.board);
   const boardSize = useSelector((state: StateType) => state.boardSize);
@@ -155,7 +156,11 @@ const Board: React.FC = () => {
 
   return (
     <div
-      className={`board board-${boardSize}`}
+      className={classNames(`board board-${boardSize}`, {
+        red: powerUps.red,
+        green: powerUps.green,
+        blue: powerUps.blue,
+      })}
       style={{ '--board-size': boardSize } as any}
       onMouseDown={onMouseStart}
       onMouseUp={onMouseEnd}

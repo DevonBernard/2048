@@ -126,6 +126,46 @@ button {
   }
 }
 
+.powerup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em;
+  border: 5px solid rgba(#4e44ce, 0.25);
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0.7;
+  padding: 0.5em;
+
+  &.active {
+    border: 5px solid #4e44ce;
+    background-color: rgba(#4e44ce, 0.1);
+    opacity: 1;
+
+    img {
+      filter: none;
+    }
+  }
+
+  &.locked {
+    border-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(0, 0, 0, 0.02);
+    // opacity: 0.4;
+    cursor: not-allowed;
+    img {
+      filter: blur(3px) saturate(0.5);
+      opacity: 0.4;
+    }
+  }
+
+  img {
+    display: flex;
+    height: 100px;
+    border-radius: 3px;
+    margin-bottom: 0.5em;
+  }
+}
+
 .board {
   position: relative;
   background: #bbada0;
@@ -136,6 +176,152 @@ button {
   padding: var(--grid-gap);
   user-select: none;
   touch-action: none;
+
+  &.red {
+    // filter: hue-rotate(310deg) saturate(1.5);
+    .board-tile {
+      .board-tile-2 {
+        background: #efdbdb;
+      }
+
+      .board-tile-4 {
+        background: #f1cdca;
+      }
+
+      .board-tile-8 {
+        background: #f7837d;
+      }
+
+      .board-tile-16 {
+        background: #f96e67;
+      }
+
+      .board-tile-32 {
+        background: #f76861;
+      }
+
+      .board-tile-64 {
+        background: #f7463d;
+      }
+
+      .board-tile-128 {
+        background: #f7817b;
+      }
+
+      .board-tile-256 {
+        background: #f8746d;
+      }
+
+      .board-tile-512 {
+        background: #f8665f;
+      }
+
+      .board-tile-1024 {
+        background: #f95952;
+      }
+
+      .board-tile-2048 {
+        background: #f94e46;
+      }
+    }
+  }
+  &.green {
+    // filter: hue-rotate(90deg) saturate(1.5);
+    .board-tile {
+      .board-tile-2 {
+        background: #d1ecd9;
+      }
+
+      .board-tile-4 {
+        background: #b4eed0;
+      }
+
+      .board-tile-8 {
+        background: #00df6b;
+      }
+
+      .board-tile-16 {
+        background: #00ce25;
+      }
+
+      .board-tile-32 {
+        background: #00ba00;
+      }
+
+      .board-tile-64 {
+        background: #00ac00;
+      }
+
+      .board-tile-128 {
+        background: #00fba3;
+      }
+
+      .board-tile-256 {
+        background: #00fd99;
+      }
+
+      .board-tile-512 {
+        background: #00fd90;
+      }
+
+      .board-tile-1024 {
+        background: #00ff86;
+      }
+
+      .board-tile-2048 {
+        background: #00ff81;
+      }
+    }
+  }
+  &.blue {
+    // filter: hue-rotate(180deg) saturate(1.5);
+
+    .board-tile {
+      .board-tile-2 {
+        background: #d8e7f5;
+      }
+
+      .board-tile-4 {
+        background: #cee3ff;
+      }
+
+      .board-tile-8 {
+        background: #5bc8ff;
+      }
+
+      .board-tile-16 {
+        background: #00beff;
+      }
+
+      .board-tile-32 {
+        background: #00b6e1;
+      }
+
+      .board-tile-64 {
+        background: #00a7db;
+      }
+
+      .board-tile-128 {
+        background: #a1d0ff;
+      }
+
+      .board-tile-256 {
+        background: #99cdff;
+      }
+
+      .board-tile-512 {
+        background: #90c9ff;
+      }
+
+      .board-tile-1024 {
+        background: #86c8ff;
+      }
+
+      .board-tile-2048 {
+        background: #81c5ff;
+      }
+    }
+  }
 
   &-tile {
     position: relative;
