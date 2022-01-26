@@ -64,6 +64,28 @@ export const GamePage: React.FC = () => {
     }
   }, [publicKey]);
 
+  const requestNft = (name: string) => {
+    if (publicKey) {
+      apiCall('POST', '/nfts/award', { address: publicKey, name: name }).then(
+        awardResp => {
+          if (awardResp.respJson.success) {
+            const nft = awardResp.respJson.result;
+            let newNfts = JSON.parse(JSON.stringify(nfts));
+            newNfts.push(nft);
+            setNfts(newNfts);
+            if (nft?.attributes && nft?.attributes?.powerup) {
+              const newOwnedPowerUps = JSON.parse(
+                JSON.stringify(ownedPowerUps)
+              );
+              newOwnedPowerUps[nft.attributes.powerup] = true;
+              setOwnedPowerups(newOwnedPowerUps);
+            }
+          }
+        }
+      );
+    }
+  };
+
   return (
     <div>
       <Header />
