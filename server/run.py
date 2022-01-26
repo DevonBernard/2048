@@ -57,16 +57,31 @@ def get_user_nfts():
 @app.route('/nfts/award', methods=['POST'])
 def award_nft():
     address = request.json['address']
+    name = request.json['name']
 
     if address not in accounts:
         return jsonify({'success':False, 'error': 'Account not found'}), 422
 
-    # Load available tenant NFTs
-    tenant_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(tenant_auth_token))
-    tenant_nft_resp_json = tenant_nft_resp.json()
-    tenant_nft = None
-    if 'success' in tenant_nft_resp_json:
-        tenant_nft = tenant_nft_resp_json['result'][0]
+    # (Option 1) Load available tenant NFTs
+    # tenant_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(tenant_auth_token))
+    # tenant_nft_resp_json = tenant_nft_resp.json()
+    # tenant_nft = None
+    # if 'success' in tenant_nft_resp_json:
+    #     tenant_nft = tenant_nft_resp_json['result'][0]
+
+    # (Option 2) Mint NFT to tenant
+    promo_names = {
+        'red': '2048red',
+        'green': '2048green',
+        'blue': '2048blue'
+    }
+    if name not in promo_names:
+        return jsonify({'success': False, 'error': 'Invalid NFT name'}), 422
+    tenant_mint_resp = requests.post(f'{target}/promos/{promo_names[name]}', headers=_create_header(tenant_auth_token))
+    tenant_mint_resp_json = tenant_mint_resp.json()
+    if 'success' not in tenant_mint_resp_json or not tenant_mint_resp_json['success']:
+        return jsonify({'success': False, 'error': 'Application failed to mint NFT'}), 422
+    tenant_nft = tenant_mint_resp_json['result']['redeemed']
     
     # Transfer tenant NFT to user
     transfer_payload = {
@@ -79,7 +94,7 @@ def award_nft():
     transfer_nft_resp_json = transfer_nft_resp.json()
 
     if 'success' in transfer_nft_resp_json:
-        return jsonify({'success': True}), 200
+        return jsonify({'success': True, 'result': tenant_nft}), 200
 
     return jsonify({'success': False, 'error': 'Failed to award NFT to user'}), 422
 
