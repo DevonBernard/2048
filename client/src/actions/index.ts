@@ -27,3 +27,10 @@ export function dismissAction(): ActionModel {
     type: ActionType.DISMISS,
   };
 }
+
+export function setBestScore(best: number): ActionModel {
+  return {
+    type: ActionType.SET_BEST,
+    value: best,
+  };
+}

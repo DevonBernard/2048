@@ -19,7 +19,8 @@ def auth_account():
     address = request.json['address']
 
     if address in accounts:
-        return jsonify({'success':True}), 200
+        account = accounts[address]
+        return jsonify({'success':True, 'result': {'highScore': account['highScore']}}), 200
 
     payload = {
         'email': f'demo+{address}@test.com',
@@ -33,10 +34,10 @@ def auth_account():
 
     if resp_json['success']:
         token = resp_json['result']['token']
-        accounts[address] = {'token': token,'depositAddress':''}
+        accounts[address] = {'token': token,'depositAddress':'', 'highScore': 0}
         with open('accounts.json', 'w') as accounts_file:
             json.dump(accounts, accounts_file)
-        return jsonify({'success':True}), 200
+        return jsonify({'success':True, 'result': {'highScore': 0}}), 200
 
     return jsonify({'success': False, 'error': 'Failed to login'}), 422
 

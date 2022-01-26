@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 import Header from '../components/Header';
@@ -7,6 +8,7 @@ import { apiCall } from '../utils/network';
 
 import BoardSizePicker from '../components/BoardSizePicker';
 import { PowerUp } from '../components/PowerUp';
+import { setBestScore } from '../actions';
 
 const powerUpLibrary = {
   colors: [
@@ -29,6 +31,7 @@ const powerUpLibrary = {
 };
 
 export const GamePage: React.FC = () => {
+  const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const [nfts, setNfts] = useState([]);
   const [powerUps, setPowerUps]: [any, any] = useState({});
@@ -38,24 +41,31 @@ export const GamePage: React.FC = () => {
   useEffect(() => {
     if (publicKey) {
       apiCall('POST', '/auth', { address: publicKey }).then(authResp => {
-        apiCall('GET', `/users/nfts?address=${publicKey}`).then(
-          (nftResp: any) => {
-            console.log('User NFTs', nftResp);
-            if (nftResp.respJson.success) {
-              setNfts(nftResp.respJson.result);
-              const respPowerUps = nftResp.respJson.result.reduce(
-                (agg: any, nft: any) => {
-                  if (nft.attributes && nft.attributes.powerup) {
-                    agg[nft.attributes.powerup] = true;
-                  }
-                  return agg;
-                },
-                {}
-              );
-              setOwnedPowerups(respPowerUps);
-            }
+        if (authResp.respJson.success) {
+          console.log(authResp.respJson.result);
+          if (authResp.respJson.result.highScore) {
+            dispatch(setBestScore(authResp.respJson.result.highScore));
           }
-        );
+          apiCall('GET', `/users/nfts?address=${publicKey}`).then(
+            (nftResp: any) => {
+              console.log('User NFTs', nftResp);
+              if (nftResp.respJson.success) {
+                const respPowerUps = nftResp.respJson.result.reduce(
+                  (agg: any, nft: any) => {
+                    if (nft.attributes && nft.attributes.powerup) {
+                      agg[nft.attributes.powerup] = true;
+                    }
+                    return agg;
+                  },
+                  {}
+                );
+                setOwnedPowerups(respPowerUps);
+              }
+            }
+          );
+        } else {
+          alert('Failed to login');
+        }
       });
     } else {
       setNfts([]);

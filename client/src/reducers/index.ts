@@ -117,6 +117,9 @@ function applicationState(state = initialState, action: ActionModel) {
     case ActionType.DISMISS:
       newState.victoryDismissed = true;
       break;
+    case ActionType.SET_BEST:
+      newState.best = action.value;
+      break;
     default:
       return state;
   }

@@ -50,7 +50,7 @@ export function getStoredData(): StorageModel {
 
     if (data.hasOwnProperty('best')) {
       if (typeof data.best === 'number') {
-        model.best = data.best;
+        model.best = 0; //data.best;
       } else {
         throw new Error('Invalid stored data.');
       }
