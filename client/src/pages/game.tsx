@@ -72,7 +72,7 @@ export const GamePage: React.FC = () => {
     }
   }, [publicKey]);
 
-  const requestNft = (name: string) => {
+  const requestNft = (name: string, callback: any) => {
     if (publicKey) {
       apiCall('POST', '/nfts/award', { address: publicKey, name: name }).then(
         awardResp => {
@@ -87,6 +87,7 @@ export const GamePage: React.FC = () => {
               );
               newOwnedPowerUps[nft.attributes.powerup] = true;
               setOwnedPowerups(newOwnedPowerUps);
+              callback(nft);
             }
           }
         }
@@ -97,32 +98,8 @@ export const GamePage: React.FC = () => {
   return (
     <div>
       <Header />
-      <Board powerUps={powerUps} />
+      <Board powerUps={powerUps} requestNft={requestNft} />
       <BoardSizePicker />
-      <h2>Give me NFT</h2>
-      <div className="size-picker">
-        <button
-          onClick={evt => {
-            requestNft('red');
-          }}
-        >
-          Red
-        </button>
-        <button
-          onClick={evt => {
-            requestNft('blue');
-          }}
-        >
-          Blue
-        </button>
-        <button
-          onClick={evt => {
-            requestNft('green');
-          }}
-        >
-          Green
-        </button>
-      </div>
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
         {powerUpLibrary.colors.map(powerUp => (

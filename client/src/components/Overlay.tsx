@@ -1,15 +1,32 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
+import classNames from 'classnames';
+// @ts-ignore
+import confetti from 'canvas-confetti';
 
 import { dismissAction, resetAction } from '../actions';
 import { StateType } from '../reducers';
 import { apiCall } from '../utils/network';
 
-const Overlay: React.FC = () => {
+export const customConfetti = () => {
+  confetti({
+    particleCount: 400,
+    spread: 100,
+    origin: {
+      x: 0.5,
+      y: 0.7,
+    },
+  });
+};
+
+const Overlay: any = ({ requestNft }: { requestNft: any }) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const dismiss = useCallback(() => dispatch(dismissAction()), [dispatch]);
+  const [cardFlipped, setCardFlipped] = useState(false);
+  const [claiming, setClaiming] = useState(false);
+  const [newNft, setNewNft]: [any, any] = useState({});
 
   const defeat = useSelector((state: StateType) => state.defeat);
   const victory = useSelector(
@@ -25,13 +42,72 @@ const Overlay: React.FC = () => {
     dispatch(resetAction());
   }, [dispatch, score, best]);
 
+  const claimPrizeButton = (
+    <button
+      onClick={async () => {
+        if (!claiming) {
+          setClaiming(true);
+          requestNft('red', (nft: any) => {
+            setNewNft(nft);
+            setClaiming(false);
+          });
+        }
+      }}
+    >
+      Claim Prize
+    </button>
+  );
+
+  if (Object.keys(newNft).length > 0) {
+    return (
+      <div className="overlay overlay-prize">
+        <div
+          className={classNames('flip-box', { flipped: cardFlipped })}
+          onMouseMove={evt => {
+            if (!cardFlipped) {
+              customConfetti();
+              setCardFlipped(true);
+            }
+          }}
+        >
+          <div className="flip-box-inner">
+            <div className="flip-box-front">
+              <div className="flip-box-center">?</div>
+            </div>
+            <div className="flip-box-back">
+              <div className="flip-box-center">
+                <img src={newNft?.imageUrl} />
+                {newNft?.attributes?.powerup}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="overlay-buttons">
+          <button
+            onClick={() => {
+              reset();
+              setNewNft({});
+              setCardFlipped(false);
+            }}
+          >
+            New Game
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   if (victory) {
     return (
       <div className="overlay overlay-victory">
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          <button onClick={reset}>Try again</button>
+          {score > 100 ? (
+            claimPrizeButton
+          ) : (
+            <button onClick={reset}>Try again</button>
+          )}
         </div>
       </div>
     );
@@ -42,7 +118,11 @@ const Overlay: React.FC = () => {
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          <button onClick={reset}>Try again</button>
+          {score > 100 ? (
+            claimPrizeButton
+          ) : (
+            <button onClick={reset}>Try again</button>
+          )}
         </div>
       </div>
     );

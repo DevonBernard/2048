@@ -12,7 +12,13 @@ import { moveAction } from '../actions';
 import BoardTile from './BoardTile';
 import Overlay from './Overlay';
 
-const Board: any = ({ powerUps }: { powerUps: any }) => {
+const Board: any = ({
+  powerUps,
+  requestNft,
+}: {
+  powerUps: any;
+  requestNft: any;
+}) => {
   const dispatch = useDispatch();
   const board = useSelector((state: StateType) => state.board);
   const boardSize = useSelector((state: StateType) => state.boardSize);
@@ -178,7 +184,7 @@ const Board: any = ({ powerUps }: { powerUps: any }) => {
           )}
         />
       ))}
-      <Overlay />
+      <Overlay requestNft={requestNft} />
     </div>
   );
 };
