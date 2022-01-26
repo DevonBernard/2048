@@ -64,6 +64,9 @@ button {
       justify-content: center !important;
       flex-grow: 1;
     }
+    .wallet-adapter-dropdown-list {
+      z-index: 1000;
+    }
   }
 
   &-row {
@@ -92,6 +95,7 @@ button {
       font-weight: bold;
       text-align: center;
       margin-left: 5px;
+      min-width: 120px;
 
       div:first-child {
         color: #eee4da;
