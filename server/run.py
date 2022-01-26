@@ -40,6 +40,19 @@ def auth_account():
 
     return jsonify({'success': False, 'error': 'Failed to login'}), 422
 
+# Get NFTs in a user's wallet
+@app.route('/users/nfts', methods=['GET'])
+def get_user_nfts():
+    address = request.args.get('address')
+
+    if address not in accounts:
+        return jsonify({'success':False, 'error': 'Account not found'}), 422
+
+    user_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(accounts[address]['token']))
+    user_nft_resp_json = user_nft_resp.json()
+
+    return user_nft_resp_json
+
 def _create_header(token):
     return {
         'Content-Type': 'application/json',
