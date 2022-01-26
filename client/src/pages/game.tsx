@@ -58,6 +58,9 @@ export const GamePage: React.FC = () => {
           }
         );
       });
+    } else {
+      setNfts([]);
+      setOwnedPowerups({});
     }
   }, [publicKey]);
 
