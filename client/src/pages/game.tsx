@@ -7,10 +7,34 @@ import { apiCall } from '../utils/network';
 
 import BoardSizePicker from '../components/BoardSizePicker';
 import { WalletButton } from '../components/Wallet';
+import { PowerUp } from '../components/PowerUp';
+
+const powerUpLibrary = {
+  colors: [
+    {
+      name: 'red',
+      imageUrl:
+        'https://static.ftx.com/nfts/2b92722c-f0e0-4725-af8a-d85d3d9f11ea.png',
+    },
+    {
+      name: 'green',
+      imageUrl:
+        'https://static.ftx.com/nfts/1ebbbbd5-ae7a-461d-839c-7cd61de94424.png',
+    },
+    {
+      name: 'blue',
+      imageUrl:
+        'https://static.ftx.com/nfts/5a0eb2f2-8a4a-442b-b1fa-ee49690f441d.png',
+    },
+  ],
+};
 
 export const GamePage: React.FC = () => {
   const { publicKey } = useWallet();
   const [nfts, setNfts] = useState([]);
+  const [powerUps, setPowerUps]: [any, any] = useState({});
+  const [ownedPowerUps, setOwnedPowerups]: [{ [key: string]: boolean }, any] =
+    useState({});
 
   useEffect(() => {
     if (publicKey) {
@@ -29,6 +53,7 @@ export const GamePage: React.FC = () => {
                 },
                 {}
               );
+              setOwnedPowerups(respPowerUps);
             }
           }
         );
@@ -50,6 +75,18 @@ export const GamePage: React.FC = () => {
       </div>
       <Board />
       <BoardSizePicker />
+      <h2 style={{ marginBottom: 0 }}>Powerups</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
+        {powerUpLibrary.colors.map(powerUp => (
+          <PowerUp
+            key={powerUp.name}
+            powerUp={powerUp}
+            owned={ownedPowerUps[powerUp.name]}
+            powerUps={powerUps}
+            setPowerUps={setPowerUps}
+          />
+        ))}
+      </div>
     </div>
   );
 };
