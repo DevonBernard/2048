@@ -162,6 +162,11 @@ const Board: any = ({
     lastBoard.current = [...board];
   }, [animations, board, setRenderedBoard, setRenderedAnimations]);
 
+  let charType: string | undefined = undefined;
+  if (powerUps.runes) {
+    charType = 'runes';
+  }
+
   return (
     <div
       className={classNames(`board board-${boardSize}`, {
@@ -184,6 +189,7 @@ const Board: any = ({
           animations={renderedAnimations?.filter(
             animation => animation.index === i
           )}
+          charType={charType}
         />
       ))}
       <Overlay requestNft={requestNft} ownedPowerUps={ownedPowerUps} />

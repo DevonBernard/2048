@@ -6,11 +6,13 @@ export const PowerUp: any = ({
   powerUp,
   powerUps,
   setPowerUps,
+  challenge = false,
 }: {
   owned: boolean;
   powerUp: any;
   powerUps: any;
   setPowerUps: any;
+  challenge?: boolean;
 }) => {
   const togglePowerUp = () => {
     const newPowerUps = JSON.parse(JSON.stringify(powerUps));
@@ -20,6 +22,7 @@ export const PowerUp: any = ({
       newPowerUps.blue = false;
     }
     newPowerUps[powerUp.name] = !powerUps[powerUp.name];
+    console.log('SET', newPowerUps);
     setPowerUps(newPowerUps);
   };
 
@@ -27,14 +30,14 @@ export const PowerUp: any = ({
     <div
       className={classNames('powerup', {
         active: powerUps[powerUp.name],
-        locked: !owned,
+        locked: !owned && !challenge,
       })}
     >
       <img
         src={powerUp.imageUrl}
         alt="Nft"
         onClick={evt => {
-          if (owned) {
+          if (owned || challenge) {
             togglePowerUp();
           }
         }}

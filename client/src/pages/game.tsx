@@ -30,6 +30,14 @@ const powerUpLibrary = {
   ],
 };
 
+const challengeLibrary = [
+  {
+    name: 'runes',
+    imageUrl:
+      'https://static.ftx.com/nfts/5f2061e8-b185-41af-a2e3-e14ffcd31f07.png',
+  },
+];
+
 const initialPowerUps = {
   red: false,
   green: false,
@@ -101,6 +109,8 @@ export const GamePage: React.FC = () => {
     }
   };
 
+  console.log('INFO', powerUps);
+
   return (
     <div>
       <Header />
@@ -109,7 +119,7 @@ export const GamePage: React.FC = () => {
         requestNft={requestNft}
         ownedPowerUps={ownedPowerUps}
       />
-      <BoardSizePicker />
+      {/* <BoardSizePicker /> */}
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
         {powerUpLibrary.colors.map(powerUp => (
@@ -119,6 +129,19 @@ export const GamePage: React.FC = () => {
             owned={ownedPowerUps[powerUp.name]}
             powerUps={powerUps}
             setPowerUps={setPowerUps}
+          />
+        ))}
+      </div>
+      <h2 style={{ marginBottom: 0 }}>Challenges</h2>
+      <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
+        {challengeLibrary.map(challenge => (
+          <PowerUp
+            key={challenge.name}
+            powerUp={challenge}
+            owned={false}
+            powerUps={powerUps}
+            setPowerUps={setPowerUps}
+            challenge={true}
           />
         ))}
       </div>

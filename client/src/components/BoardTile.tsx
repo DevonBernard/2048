@@ -11,9 +11,27 @@ import {
 import { Direction } from '../types/Direction';
 import { animationDuration, gridGap } from '../config';
 
+const characterLibrary = {
+  runes: {
+    2: <span>&#5809;</span>,
+    4: <span>&#5842;</span>,
+    8: <span>&#5859;</span>,
+    16: <span>&#5854;</span>,
+    32: <span>&#5856;</span>,
+    64: <span>&#5799;</span>,
+    128: <span>&#5792;</span>,
+    256: <span>&#5816;</span>,
+    512: <span>&#5819;</span>,
+    1024: <span>&#5857;</span>,
+    2048: <span>&#5871;</span>,
+    4096: <span>&#5871;</span>,
+  },
+};
+
 export interface BoardTileProps {
   value: number;
   animations?: Animation[];
+  charType?: string;
 }
 
 function tileTranslate(axis: 'X' | 'Y', value: number) {
@@ -27,7 +45,11 @@ function findAnimation<T extends Animation>(
   return animations?.find(animation => animation.type === type) as T;
 }
 
-const BoardTile: React.FC<BoardTileProps> = ({ value, animations }) => {
+const BoardTile: React.FC<BoardTileProps> = ({
+  value,
+  animations,
+  charType,
+}) => {
   const moveAnimation = useMemo(
     () => findAnimation<AnimationMove>(animations, AnimationType.MOVE),
     [animations]
@@ -68,6 +90,11 @@ const BoardTile: React.FC<BoardTileProps> = ({ value, animations }) => {
     return value;
   }, [moveAnimation]);
 
+  // @ts-ignore
+  const charLib =
+    charType in characterLibrary ? characterLibrary[charType] : false;
+  const character = charLib && value in charLib ? charLib[value] : value;
+
   return (
     <div className="board-tile">
       {value !== 0 && (
@@ -78,7 +105,7 @@ const BoardTile: React.FC<BoardTileProps> = ({ value, animations }) => {
           })}
           style={style}
         >
-          {value}
+          {character}
         </div>
       )}
     </div>
