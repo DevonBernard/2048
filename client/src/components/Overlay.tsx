@@ -23,9 +23,13 @@ export const customConfetti = () => {
 const Overlay: any = ({
   requestNft,
   ownedPowerUps,
+  challenges,
+  ownedChallenges,
 }: {
   requestNft: any;
   ownedPowerUps: any;
+  challenges: any;
+  ownedChallenges: any;
 }) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -36,6 +40,15 @@ const Overlay: any = ({
   const unownedPowerUps: any = Object.entries(ownedPowerUps).reduce(
     (agg: any, [name, value]: any) => {
       if (!value) {
+        agg.push(name);
+      }
+      return agg;
+    },
+    []
+  );
+  const activeUnownedChallenges = Object.entries(challenges).reduce(
+    (agg: any, [name, value]: any) => {
+      if (value && name in ownedChallenges && !ownedChallenges[name]) {
         agg.push(name);
       }
       return agg;
@@ -62,16 +75,31 @@ const Overlay: any = ({
       onClick={async () => {
         if (!claiming) {
           setClaiming(true);
-          const randomPowerUp =
-            unownedPowerUps[Math.floor(Math.random() * unownedPowerUps.length)];
-          requestNft(randomPowerUp, (nft: any) => {
-            setNewNft(nft);
+          let randomNft = null;
+          if (activeUnownedChallenges.length > 0) {
+            randomNft =
+              activeUnownedChallenges[
+                Math.floor(Math.random() * activeUnownedChallenges.length)
+              ];
+          } else if (unownedPowerUps.length > 0) {
+            randomNft =
+              unownedPowerUps[
+                Math.floor(Math.random() * unownedPowerUps.length)
+              ];
+          }
+
+          if (randomNft) {
+            requestNft(randomNft, (nft: any) => {
+              setNewNft(nft);
+              setClaiming(false);
+            });
+          } else {
             setClaiming(false);
-          });
+          }
         }
       }}
     >
-      Claim Prize
+      Claim {activeUnownedChallenges.length > 0 && 'Challenge '}Prize
     </button>
   );
 
@@ -97,7 +125,7 @@ const Overlay: any = ({
             <div className="flip-box-back">
               <div className="flip-box-center">
                 <img src={newNft?.imageUrl} />
-                {newNft?.attributes?.powerup}
+                {newNft?.attributes?.powerup || newNft?.attributes?.challenge}
               </div>
             </div>
           </div>
@@ -123,7 +151,9 @@ const Overlay: any = ({
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          {publicKey && score > 100 && unownedPowerUps.length > 0 ? (
+          {publicKey &&
+          score > 100 &&
+          (unownedPowerUps.length > 0 || activeUnownedChallenges.length > 0) ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
@@ -138,7 +168,9 @@ const Overlay: any = ({
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          {publicKey && score > 100 && unownedPowerUps.length > 0 ? (
+          {publicKey &&
+          score > 100 &&
+          (unownedPowerUps.length > 0 || activeUnownedChallenges.length > 0) ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>

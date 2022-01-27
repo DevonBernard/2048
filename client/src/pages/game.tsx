@@ -49,6 +49,11 @@ const initialPowerUps = {
   blue: false,
 };
 
+const initialChallenges = {
+  runes: false,
+  invisible: false,
+};
+
 export const GamePage: React.FC = () => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -56,6 +61,12 @@ export const GamePage: React.FC = () => {
   const [powerUps, setPowerUps]: [any, any] = useState({});
   const [ownedPowerUps, setOwnedPowerups]: [{ [key: string]: boolean }, any] =
     useState(initialPowerUps);
+
+  const [challenges, setChallenges]: [any, any] = useState(initialChallenges);
+  const [ownedChallenges, setOwnedChallenges]: [
+    { [key: string]: boolean },
+    any
+  ] = useState(initialChallenges);
 
   useEffect(() => {
     if (publicKey) {
@@ -71,12 +82,19 @@ export const GamePage: React.FC = () => {
                 const newOwnedPowerUps = JSON.parse(
                   JSON.stringify(ownedPowerUps)
                 );
+                const newChallenges = JSON.parse(
+                  JSON.stringify(ownedChallenges)
+                );
                 nftResp.respJson.result.forEach((nft: any) => {
                   if (nft.attributes && nft.attributes.powerup) {
                     newOwnedPowerUps[nft.attributes.powerup] = true;
                   }
+                  if (nft.attributes && nft.attributes.challenge) {
+                    newChallenges[nft.attributes.challenge] = true;
+                  }
                 });
                 setOwnedPowerups(newOwnedPowerUps);
+                setOwnedChallenges(newChallenges);
               }
             }
           );
@@ -108,21 +126,29 @@ export const GamePage: React.FC = () => {
               setOwnedPowerups(newOwnedPowerUps);
               callback(nft);
             }
+            if (nft?.attributes && nft?.attributes?.challenge) {
+              const newOwnedChallenges = JSON.parse(
+                JSON.stringify(ownedChallenges)
+              );
+              newOwnedChallenges[nft.attributes.challenge] = true;
+              setOwnedChallenges(newOwnedChallenges);
+              callback(nft);
+            }
           }
         }
       );
     }
   };
 
-  console.log('INFO', powerUps);
-
   return (
     <div>
       <Header />
       <Board
-        powerUps={powerUps}
         requestNft={requestNft}
+        powerUps={powerUps}
         ownedPowerUps={ownedPowerUps}
+        challenges={challenges}
+        ownedChallenges={ownedChallenges}
       />
       {/* <BoardSizePicker /> */}
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
@@ -134,6 +160,9 @@ export const GamePage: React.FC = () => {
             owned={ownedPowerUps[powerUp.name]}
             powerUps={powerUps}
             setPowerUps={setPowerUps}
+            challenges={challenges}
+            setChallenges={setChallenges}
+            challenge={false}
           />
         ))}
       </div>
@@ -143,9 +172,11 @@ export const GamePage: React.FC = () => {
           <PowerUp
             key={challenge.name}
             powerUp={challenge}
-            owned={false}
+            owned={ownedChallenges[challenge.name]}
             powerUps={powerUps}
             setPowerUps={setPowerUps}
+            challenges={challenges}
+            setChallenges={setChallenges}
             challenge={true}
           />
         ))}

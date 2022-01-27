@@ -74,7 +74,10 @@ def award_nft():
     promo_names = {
         'red': '2048red',
         'green': '2048green',
-        'blue': '2048blue'
+        'blue': '2048blue',
+
+        'runes': '2048runes',
+        'invisible': '2048invisible',
     }
     if name not in promo_names:
         return jsonify({'success': False, 'error': 'Invalid NFT name'}), 422

@@ -13,13 +13,17 @@ import BoardTile from './BoardTile';
 import Overlay from './Overlay';
 
 const Board: any = ({
-  powerUps,
   requestNft,
+  powerUps,
   ownedPowerUps,
+  challenges,
+  ownedChallenges,
 }: {
-  powerUps: any;
   requestNft: any;
+  powerUps: any;
   ownedPowerUps: any;
+  challenges: any;
+  ownedChallenges: any;
 }) => {
   const dispatch = useDispatch();
   const board = useSelector((state: StateType) => state.board);
@@ -163,9 +167,9 @@ const Board: any = ({
   }, [animations, board, setRenderedBoard, setRenderedAnimations]);
 
   let charType: string | undefined = undefined;
-  if (powerUps.invisible) {
+  if (challenges.invisible) {
     charType = 'invisible';
-  } else if (powerUps.runes) {
+  } else if (challenges.runes) {
     charType = 'runes';
   }
 
@@ -194,7 +198,12 @@ const Board: any = ({
           charType={charType}
         />
       ))}
-      <Overlay requestNft={requestNft} ownedPowerUps={ownedPowerUps} />
+      <Overlay
+        requestNft={requestNft}
+        ownedPowerUps={ownedPowerUps}
+        challenges={challenges}
+        ownedChallenges={ownedChallenges}
+      />
     </div>
   );
 };
