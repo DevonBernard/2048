@@ -120,7 +120,7 @@ const Overlay: any = ({
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          {score > 1000 && unownedPowerUps.length > 0 ? (
+          {publicKey && score > 1000 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
@@ -135,7 +135,7 @@ const Overlay: any = ({
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          {score > 1000 && unownedPowerUps.length > 0 ? (
+          {publicKey && score > 1000 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
