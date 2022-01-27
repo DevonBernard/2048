@@ -104,8 +104,11 @@ export const GamePage: React.FC = () => {
       });
     } else {
       setNfts([]);
-      setOwnedPowerups(initialPowerUps);
       setPowerUps({});
+      setOwnedPowerups(initialPowerUps);
+      setChallenges(initialChallenges);
+      setOwnedChallenges(initialChallenges);
+      dispatch(setBestScore(0));
     }
   }, [publicKey]);
 
