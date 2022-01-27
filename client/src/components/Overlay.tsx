@@ -20,13 +20,28 @@ export const customConfetti = () => {
   });
 };
 
-const Overlay: any = ({ requestNft }: { requestNft: any }) => {
+const Overlay: any = ({
+  requestNft,
+  ownedPowerUps,
+}: {
+  requestNft: any;
+  ownedPowerUps: any;
+}) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const dismiss = useCallback(() => dispatch(dismissAction()), [dispatch]);
   const [cardFlipped, setCardFlipped] = useState(false);
   const [claiming, setClaiming] = useState(false);
   const [newNft, setNewNft]: [any, any] = useState({});
+  const unownedPowerUps: any = Object.entries(ownedPowerUps).reduce(
+    (agg: any, [name, value]: any) => {
+      if (!value) {
+        agg.push(name);
+      }
+      return agg;
+    },
+    []
+  );
 
   const defeat = useSelector((state: StateType) => state.defeat);
   const victory = useSelector(
@@ -47,7 +62,9 @@ const Overlay: any = ({ requestNft }: { requestNft: any }) => {
       onClick={async () => {
         if (!claiming) {
           setClaiming(true);
-          requestNft('red', (nft: any) => {
+          const randomPowerUp =
+            unownedPowerUps[Math.floor(Math.random() * unownedPowerUps.length)];
+          requestNft(randomPowerUp, (nft: any) => {
             setNewNft(nft);
             setClaiming(false);
           });
@@ -103,7 +120,7 @@ const Overlay: any = ({ requestNft }: { requestNft: any }) => {
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          {score > 100 ? (
+          {score > 1000 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
@@ -118,7 +135,7 @@ const Overlay: any = ({ requestNft }: { requestNft: any }) => {
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          {score > 100 ? (
+          {score > 1000 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>

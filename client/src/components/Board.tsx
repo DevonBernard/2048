@@ -15,9 +15,11 @@ import Overlay from './Overlay';
 const Board: any = ({
   powerUps,
   requestNft,
+  ownedPowerUps,
 }: {
   powerUps: any;
   requestNft: any;
+  ownedPowerUps: any;
 }) => {
   const dispatch = useDispatch();
   const board = useSelector((state: StateType) => state.board);
@@ -184,7 +186,7 @@ const Board: any = ({
           )}
         />
       ))}
-      <Overlay requestNft={requestNft} />
+      <Overlay requestNft={requestNft} ownedPowerUps={ownedPowerUps} />
     </div>
   );
 };

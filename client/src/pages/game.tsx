@@ -30,13 +30,19 @@ const powerUpLibrary = {
   ],
 };
 
+const initialPowerUps = {
+  red: false,
+  green: false,
+  blue: false,
+};
+
 export const GamePage: React.FC = () => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const [nfts, setNfts] = useState([]);
   const [powerUps, setPowerUps]: [any, any] = useState({});
   const [ownedPowerUps, setOwnedPowerups]: [{ [key: string]: boolean }, any] =
-    useState({});
+    useState(initialPowerUps);
 
   useEffect(() => {
     if (publicKey) {
@@ -49,16 +55,15 @@ export const GamePage: React.FC = () => {
             (nftResp: any) => {
               console.log('User NFTs', nftResp);
               if (nftResp.respJson.success) {
-                const respPowerUps = nftResp.respJson.result.reduce(
-                  (agg: any, nft: any) => {
-                    if (nft.attributes && nft.attributes.powerup) {
-                      agg[nft.attributes.powerup] = true;
-                    }
-                    return agg;
-                  },
-                  {}
+                const newOwnedPowerUps = JSON.parse(
+                  JSON.stringify(ownedPowerUps)
                 );
-                setOwnedPowerups(respPowerUps);
+                nftResp.respJson.result.forEach((nft: any) => {
+                  if (nft.attributes && nft.attributes.powerup) {
+                    newOwnedPowerUps[nft.attributes.powerup] = true;
+                  }
+                });
+                setOwnedPowerups(newOwnedPowerUps);
               }
             }
           );
@@ -68,7 +73,7 @@ export const GamePage: React.FC = () => {
       });
     } else {
       setNfts([]);
-      setOwnedPowerups({});
+      setOwnedPowerups(initialPowerUps);
     }
   }, [publicKey]);
 
@@ -98,7 +103,11 @@ export const GamePage: React.FC = () => {
   return (
     <div>
       <Header />
-      <Board powerUps={powerUps} requestNft={requestNft} />
+      <Board
+        powerUps={powerUps}
+        requestNft={requestNft}
+        ownedPowerUps={ownedPowerUps}
+      />
       <BoardSizePicker />
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>
