@@ -74,6 +74,7 @@ export const GamePage: React.FC = () => {
     } else {
       setNfts([]);
       setOwnedPowerups(initialPowerUps);
+      setPowerUps({});
     }
   }, [publicKey]);
 
