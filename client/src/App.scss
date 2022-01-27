@@ -454,8 +454,9 @@ button {
   justify-content: center;
   align-items: center;
 
-  background: rgba(238, 228, 218, 0.73);
+  background-color: rgba(238, 228, 218, 0.73);
   animation: reveal 0.4s ease-in-out;
+  transition: background-color 0.4s ease-in-out;
 
   img {
     margin-bottom: 1em;
@@ -463,16 +464,16 @@ button {
   }
 
   &-defeat {
-    background: rgba(238, 228, 218, 0.73);
+    background-color: rgba(238, 228, 218, 0.73);
   }
 
   &-victory {
-    background: rgba(237, 194, 46, 0.5);
+    background-color: rgba(237, 194, 46, 0.5);
     color: #f9f6f2;
   }
 
   &-prize {
-    background: rgba(#4e44ce, 0.5);
+    background-color: rgba(#4e44ce, 0.5);
     color: #f9f6f2;
   }
 
@@ -602,4 +603,59 @@ button {
   height: 100%;
   align-items: center;
   justify-content: center;
+}
+
+@keyframes down-front {
+  0% {
+    transform: translateY(-1000px) scale(0.75);
+    opacity: 0.2;
+  }
+
+  70% {
+    transform: translateY(0px) scale(0.75);
+    opacity: 0.65;
+  }
+
+  80% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,
+  30% {
+    transform: scale3d(1, 1, 1);
+  }
+
+  35% {
+    transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -4deg);
+  }
+  40% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -4deg);
+  }
+  46% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 4deg);
+  }
+  52% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -4deg);
+  }
+  58% {
+    transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 4deg);
+  }
+  64% {
+    transform: scale3d(1.1, 1.1, 1.1);
+  }
+  70%,
+  100% {
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.animate-card {
+  animation: down-front 1.5s ease-in-out, shake 4s ease-in-out 1.5s infinite;
 }

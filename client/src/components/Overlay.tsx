@@ -79,7 +79,10 @@ const Overlay: any = ({
     return (
       <div className="overlay overlay-prize">
         <div
-          className={classNames('flip-box', { flipped: cardFlipped })}
+          className={classNames('flip-box', {
+            flipped: cardFlipped,
+            'animate-card': !cardFlipped,
+          })}
           onMouseMove={evt => {
             if (!cardFlipped) {
               customConfetti();
@@ -120,7 +123,7 @@ const Overlay: any = ({
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          {publicKey && score > 1000 && unownedPowerUps.length > 0 ? (
+          {publicKey && score > 100 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
@@ -135,7 +138,7 @@ const Overlay: any = ({
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          {publicKey && score > 1000 && unownedPowerUps.length > 0 ? (
+          {publicKey && score > 100 && unownedPowerUps.length > 0 ? (
             claimPrizeButton
           ) : (
             <button onClick={reset}>Try again</button>
