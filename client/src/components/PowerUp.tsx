@@ -21,6 +21,10 @@ export const PowerUp: any = ({
       newPowerUps.green = false;
       newPowerUps.blue = false;
     }
+    if (['invisible', 'runes'].includes(powerUp.name)) {
+      newPowerUps.invisible = false;
+      newPowerUps.runes = false;
+    }
     newPowerUps[powerUp.name] = !powerUps[powerUp.name];
     console.log('SET', newPowerUps);
     setPowerUps(newPowerUps);

@@ -163,7 +163,9 @@ const Board: any = ({
   }, [animations, board, setRenderedBoard, setRenderedAnimations]);
 
   let charType: string | undefined = undefined;
-  if (powerUps.runes) {
+  if (powerUps.invisible) {
+    charType = 'invisible';
+  } else if (powerUps.runes) {
     charType = 'runes';
   }
 

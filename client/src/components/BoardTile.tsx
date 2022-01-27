@@ -12,6 +12,20 @@ import { Direction } from '../types/Direction';
 import { animationDuration, gridGap } from '../config';
 
 const characterLibrary = {
+  invisible: {
+    2: <span></span>,
+    4: <span></span>,
+    8: <span></span>,
+    16: <span></span>,
+    32: <span></span>,
+    64: <span></span>,
+    128: <span></span>,
+    256: <span></span>,
+    512: <span></span>,
+    1024: <span></span>,
+    2048: <span></span>,
+    4096: <span></span>,
+  },
   runes: {
     2: <span>&#5809;</span>,
     4: <span>&#5842;</span>,
@@ -90,8 +104,8 @@ const BoardTile: React.FC<BoardTileProps> = ({
     return value;
   }, [moveAnimation]);
 
-  // @ts-ignore
   const charLib =
+    // @ts-ignore
     charType in characterLibrary ? characterLibrary[charType] : false;
   const character = charLib && value in charLib ? charLib[value] : value;
 

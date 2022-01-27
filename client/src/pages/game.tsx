@@ -36,6 +36,11 @@ const challengeLibrary = [
     imageUrl:
       'https://static.ftx.com/nfts/5f2061e8-b185-41af-a2e3-e14ffcd31f07.png',
   },
+  {
+    name: 'invisible',
+    imageUrl:
+      'https://static.ftx.com/nfts/cb53e027-0a4c-40a3-a505-8aa513f42a07.png',
+  },
 ];
 
 const initialPowerUps = {
