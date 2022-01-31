@@ -8,6 +8,7 @@ import { apiCall } from '../utils/network';
 
 import BoardSizePicker from '../components/BoardSizePicker';
 import { PowerUp } from '../components/PowerUp';
+import Modal from '../components/Modal';
 import { setBestScore } from '../actions';
 
 const powerUpLibrary = {
@@ -58,9 +59,12 @@ export const GamePage: React.FC = () => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const [nfts, setNfts] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [powerUps, setPowerUps]: [any, any] = useState({});
   const [ownedPowerUps, setOwnedPowerups]: [{ [key: string]: boolean }, any] =
     useState(initialPowerUps);
+  const [accountId, setAccountId] = useState('');
+  const [username, setUsername] = useState('');
 
   const [challenges, setChallenges]: [any, any] = useState(initialChallenges);
   const [ownedChallenges, setOwnedChallenges]: [
@@ -69,40 +73,47 @@ export const GamePage: React.FC = () => {
   ] = useState(initialChallenges);
 
   useEffect(() => {
-    if (publicKey) {
-      apiCall('POST', '/auth', { address: publicKey }).then(authResp => {
-        if (authResp.respJson.success) {
-          if (authResp.respJson.result.highScore) {
-            dispatch(setBestScore(authResp.respJson.result.highScore));
-          }
-          apiCall('GET', `/users/nfts?address=${publicKey}`).then(
-            (nftResp: any) => {
-              console.log('User NFTs', nftResp);
-              if (nftResp.respJson.success) {
-                const newOwnedPowerUps = JSON.parse(
-                  JSON.stringify(ownedPowerUps)
-                );
-                const newChallenges = JSON.parse(
-                  JSON.stringify(ownedChallenges)
-                );
-                nftResp.respJson.result.forEach((nft: any) => {
-                  if (nft.attributes && nft.attributes.powerup) {
-                    newOwnedPowerUps[nft.attributes.powerup] = true;
-                  }
-                  if (nft.attributes && nft.attributes.challenge) {
-                    newChallenges[nft.attributes.challenge] = true;
-                  }
-                });
-                setOwnedPowerups(newOwnedPowerUps);
-                setOwnedChallenges(newChallenges);
-              }
+    if (publicKey || username) {
+      console.log('TRY', publicKey, username);
+      apiCall('POST', '/auth', { address: publicKey, username: username }).then(
+        authResp => {
+          if (authResp.respJson.success) {
+            if (authResp.respJson.result.highScore) {
+              dispatch(setBestScore(authResp.respJson.result.highScore));
             }
-          );
-        } else {
-          alert('Failed to login');
+            const { accountId } = authResp.respJson.result;
+            setAccountId(accountId);
+            apiCall('GET', `/users/nfts?accountId=${accountId}`).then(
+              (nftResp: any) => {
+                console.log('User NFTs', nftResp);
+                if (nftResp.respJson.success) {
+                  const newOwnedPowerUps = JSON.parse(
+                    JSON.stringify(ownedPowerUps)
+                  );
+                  const newChallenges = JSON.parse(
+                    JSON.stringify(ownedChallenges)
+                  );
+                  nftResp.respJson.result.forEach((nft: any) => {
+                    if (nft.attributes && nft.attributes.powerup) {
+                      newOwnedPowerUps[nft.attributes.powerup] = true;
+                    }
+                    if (nft.attributes && nft.attributes.challenge) {
+                      newChallenges[nft.attributes.challenge] = true;
+                    }
+                  });
+                  setOwnedPowerups(newOwnedPowerUps);
+                  setOwnedChallenges(newChallenges);
+                }
+              }
+            );
+          } else {
+            alert('Failed to login');
+          }
         }
-      });
+      );
     } else {
+      setUsername('');
+      setAccountId('');
       setNfts([]);
       setPowerUps({});
       setOwnedPowerups(initialPowerUps);
@@ -110,11 +121,11 @@ export const GamePage: React.FC = () => {
       setOwnedChallenges(initialChallenges);
       dispatch(setBestScore(0));
     }
-  }, [publicKey]);
+  }, [publicKey, username]);
 
   const requestNft = (name: string, callback: any) => {
     if (publicKey) {
-      apiCall('POST', '/nfts/award', { address: publicKey, name: name }).then(
+      apiCall('POST', '/nfts/award', { accountId: accountId, name: name }).then(
         awardResp => {
           if (awardResp.respJson.success) {
             const nft = awardResp.respJson.result;
@@ -145,13 +156,21 @@ export const GamePage: React.FC = () => {
 
   return (
     <div>
-      <Header />
+      <Header setShowModal={setShowModal} accountId={accountId} />
+      <Modal
+        show={showModal}
+        setShow={setShowModal}
+        username={username}
+        setUsername={setUsername}
+        accountId={accountId}
+      />
       <Board
         requestNft={requestNft}
         powerUps={powerUps}
         ownedPowerUps={ownedPowerUps}
         challenges={challenges}
         ownedChallenges={ownedChallenges}
+        accountId={accountId}
       />
       {/* <BoardSizePicker /> */}
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>

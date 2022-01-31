@@ -55,18 +55,6 @@ button {
   .account-info {
     display: flex;
     flex-direction: column;
-
-    .wallet-adapter-dropdown {
-      display: flex;
-    }
-    .wallet-adapter-button {
-      display: flex;
-      justify-content: center !important;
-      flex-grow: 1;
-    }
-    .wallet-adapter-dropdown-list {
-      z-index: 1000;
-    }
   }
 
   &-row {
@@ -454,7 +442,7 @@ button {
 }
 
 .overlay {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -470,9 +458,76 @@ button {
   animation: reveal 0.4s ease-in-out;
   transition: background-color 0.4s ease-in-out;
 
-  img {
-    margin-bottom: 1em;
-    height: 100px;
+  .overlay-capture {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 1px solid red;
+    z-index: 1000;
+  }
+
+  .overlay-card {
+    background: #fafafa;
+    padding: 2em 3em;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+
+    .overlay-center {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .logo {
+      width: 100px;
+      margin: 0 auto 1em auto;
+    }
+
+    input {
+      background: #fff;
+      border: 1px solid #ccc;
+      font-size: 20px;
+      padding: 0.5em 1em;
+      margin-bottom: 1em;
+      border-radius: 8px;
+      color: #333;
+    }
+
+    .divisor {
+      margin: 20px 0 40px 0;
+      border-bottom: 1px solid #ddd;
+      color: #aaa;
+      text-align: center;
+      span {
+        position: relative;
+        // font-size: 18px;
+        bottom: -10px;
+        background: #fafafa;
+        padding: 0 1em;
+      }
+    }
+
+    .wallet-adapter-dropdown {
+      display: flex;
+    }
+    .wallet-adapter-button {
+      display: flex;
+      justify-content: center !important;
+      flex-grow: 1;
+    }
+    .wallet-adapter-dropdown-list {
+      z-index: 1000;
+    }
+  }
+
+  .flip-box {
+    img {
+      margin-bottom: 1em;
+      height: 100px;
+    }
   }
 
   &-defeat {

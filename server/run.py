@@ -16,40 +16,42 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # Login or create account for user
 @app.route('/auth', methods=['POST'])
 def auth_account():
-    address = request.json['address']
-
-    if address in accounts:
-        account = accounts[address]
-        return jsonify({'success':True, 'result': {'highScore': account['highScore']}}), 200
+    address = request.json['address'] if 'address' in request.json else False
+    username = request.json['username'] if 'username' in request.json else False
+    account_id = address or username
 
     payload = {
-        'email': f'demo+{address}@test.com',
+        'email': f'demo+{account_id}@test.com',
         'password': 'BadPassw0rd!',
         'persistLogin': True
     }
     headers = _create_header(tenant_auth_token)
 
-    resp = requests.post(f'{target}/users/{tenant}/create', json=payload, headers=headers)
+    auth_action = "create" if account_id not in accounts else "login"
+
+    resp = requests.post(f'{target}/users/{tenant}/{auth_action}', json=payload, headers=headers)
     resp_json = resp.json()
 
     if resp_json['success']:
         token = resp_json['result']['token']
-        accounts[address] = {'token': token,'depositAddress':'', 'highScore': 0}
+        if account_id not in accounts:
+            accounts[account_id] = {'token': token,'depositAddress':'', 'highScore': 0}
+        else:
+            accounts[account_id]['token'] = token
         with open('accounts.json', 'w') as accounts_file:
-            json.dump(accounts, accounts_file)
-        return jsonify({'success':True, 'result': {'highScore': 0}}), 200
+                json.dump(accounts, accounts_file)
+        return jsonify({'success':True, 'result': {'highScore': accounts[account_id]['highScore'], 'accountId': account_id}}), 200
 
     return jsonify({'success': False, 'error': 'Failed to login'}), 422
 
 # Get NFTs in a user's wallet
 @app.route('/users/nfts', methods=['GET'])
 def get_user_nfts():
-    address = request.args.get('address')
+    account_id = request.args.get('accountId')
 
-    if address not in accounts:
+    if account_id not in accounts:
         return jsonify({'success':False, 'error': 'Account not found'}), 422
-
-    user_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(accounts[address]['token']))
+    user_nft_resp = requests.get(f'{target}/nft/balances', headers=_create_header(accounts[account_id]['token']))
     user_nft_resp_json = user_nft_resp.json()
 
     return user_nft_resp_json
@@ -57,10 +59,10 @@ def get_user_nfts():
 # Send an NFT to a user's wallet
 @app.route('/nfts/award', methods=['POST'])
 def award_nft():
-    address = request.json['address']
+    account_id = request.json['accountId']
     name = request.json['name']
 
-    if address not in accounts:
+    if account_id not in accounts:
         return jsonify({'success':False, 'error': 'Account not found'}), 422
 
     # (Option 1) Load available tenant NFTs
@@ -92,7 +94,7 @@ def award_nft():
         "coin": "SOL",
         "nftId": str(tenant_nft['id']),
         "method": "sol",
-        "address": accounts[address]['depositAddress']
+        "address": accounts[account_id]['depositAddress']
     }
     transfer_nft_resp = requests.post(f'{target}/wallet/withdrawals', json=transfer_payload, headers=_create_header(tenant_auth_token))
     transfer_nft_resp_json = transfer_nft_resp.json()
@@ -106,11 +108,11 @@ def award_nft():
 # Login or create account for user
 @app.route('/highscores', methods=['POST'])
 def update_highscore():
-    address = request.json['address']
+    account_id = request.json['accountId']
     highscore = request.json['highScore']
 
-    if address in accounts:
-        account = accounts[address]
+    if account_id in accounts:
+        account = accounts[account_id]
         if highscore > account['highScore']:
             account['highScore'] = highscore
             with open('accounts.json', 'w') as accounts_file:

@@ -25,11 +25,13 @@ const Overlay: any = ({
   ownedPowerUps,
   challenges,
   ownedChallenges,
+  accountId,
 }: {
   requestNft: any;
   ownedPowerUps: any;
   challenges: any;
   ownedChallenges: any;
+  accountId: string;
 }) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -65,7 +67,7 @@ const Overlay: any = ({
 
   const reset = useCallback(() => {
     if (score === best) {
-      apiCall('POST', '/highscores', { address: publicKey, highScore: best });
+      apiCall('POST', '/highscores', { accountId: accountId, highScore: best });
     }
     dispatch(resetAction());
   }, [dispatch, score, best]);

@@ -18,12 +18,14 @@ const Board: any = ({
   ownedPowerUps,
   challenges,
   ownedChallenges,
+  accountId,
 }: {
   requestNft: any;
   powerUps: any;
   ownedPowerUps: any;
   challenges: any;
   ownedChallenges: any;
+  accountId: any;
 }) => {
   const dispatch = useDispatch();
   const board = useSelector((state: StateType) => state.board);
@@ -44,19 +46,21 @@ const Board: any = ({
 
   useEffect(() => {
     const keydownListener = (e: KeyboardEvent) => {
-      e.preventDefault();
-
       switch (e.key) {
         case 'ArrowDown':
+          e.preventDefault();
           onMove(Direction.DOWN);
           break;
         case 'ArrowUp':
+          e.preventDefault();
           onMove(Direction.UP);
           break;
         case 'ArrowLeft':
+          e.preventDefault();
           onMove(Direction.LEFT);
           break;
         case 'ArrowRight':
+          e.preventDefault();
           onMove(Direction.RIGHT);
           break;
       }
@@ -203,6 +207,7 @@ const Board: any = ({
         ownedPowerUps={ownedPowerUps}
         challenges={challenges}
         ownedChallenges={ownedChallenges}
+        accountId={accountId}
       />
     </div>
   );

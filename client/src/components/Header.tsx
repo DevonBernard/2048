@@ -4,10 +4,15 @@ import { useWallet } from '@solana/wallet-adapter-react';
 
 import { resetAction, undoAction } from '../actions';
 import { StateType } from '../reducers';
-import { WalletButton } from '../components/Wallet';
 import { apiCall } from '../utils/network';
 
-const Header: React.FC = () => {
+const Header: any = ({
+  setShowModal,
+  accountId,
+}: {
+  setShowModal: any;
+  accountId: string;
+}) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
   const undo = useCallback(() => dispatch(undoAction()), [dispatch]);
@@ -20,7 +25,7 @@ const Header: React.FC = () => {
 
   const reset = useCallback(() => {
     if (score === best) {
-      apiCall('POST', '/highscores', { address: publicKey, highScore: best });
+      apiCall('POST', '/highscores', { accountId: accountId, highScore: best });
     }
     dispatch(resetAction());
   }, [dispatch, score, best]);
@@ -35,7 +40,17 @@ const Header: React.FC = () => {
           </div>
         </div>
         <div className="account-info">
-          <WalletButton />
+          <button
+            onClick={evt => {
+              setShowModal(true);
+            }}
+          >
+            {accountId
+              ? accountId.length > 15
+                ? `${accountId.substring(0, 12)}...`
+                : accountId
+              : 'Login / Register'}
+          </button>
           <div className="header-scores">
             <div className="header-scores-score">
               <div>Score</div>
