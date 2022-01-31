@@ -112,6 +112,7 @@ export const GamePage: React.FC = () => {
         }
       );
     } else {
+      setShowModal(false);
       setUsername('');
       setAccountId('');
       setNfts([]);
