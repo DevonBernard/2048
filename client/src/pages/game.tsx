@@ -74,7 +74,6 @@ export const GamePage: React.FC = () => {
 
   useEffect(() => {
     if (publicKey || username) {
-      console.log('TRY', publicKey, username);
       apiCall('POST', '/auth', { address: publicKey, username: username }).then(
         authResp => {
           if (authResp.respJson.success) {
@@ -125,7 +124,7 @@ export const GamePage: React.FC = () => {
   }, [publicKey, username]);
 
   const requestNft = (name: string, callback: any) => {
-    if (publicKey) {
+    if (accountId) {
       apiCall('POST', '/nfts/award', { accountId: accountId, name: name }).then(
         awardResp => {
           if (awardResp.respJson.success) {

@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useWallet } from '@solana/wallet-adapter-react';
 import classNames from 'classnames';
 // @ts-ignore
 import confetti from 'canvas-confetti';
@@ -34,7 +33,6 @@ const Overlay: any = ({
   accountId: string;
 }) => {
   const dispatch = useDispatch();
-  const { publicKey } = useWallet();
   const dismiss = useCallback(() => dispatch(dismissAction()), [dispatch]);
   const [cardFlipped, setCardFlipped] = useState(false);
   const [claiming, setClaiming] = useState(false);
@@ -153,7 +151,7 @@ const Overlay: any = ({
         <h1>You win!</h1>
         <div className="overlay-buttons">
           <button onClick={dismiss}>Keep going</button>
-          {publicKey &&
+          {accountId &&
           score > 100 &&
           (unownedPowerUps.length > 0 || activeUnownedChallenges.length > 0) ? (
             claimPrizeButton
@@ -170,7 +168,7 @@ const Overlay: any = ({
       <div className="overlay overlay-defeat">
         <h1>Game over!</h1>
         <div className="overlay-buttons">
-          {publicKey &&
+          {accountId &&
           score > 100 &&
           (unownedPowerUps.length > 0 || activeUnownedChallenges.length > 0) ? (
             claimPrizeButton
