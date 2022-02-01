@@ -59,7 +59,14 @@ const Modal: any = ({
           </button>
         )}
         {!username && !publicKey && (
-          <div className="overlay-center">
+          <form
+            className="overlay-center"
+            onSubmit={evt => {
+              evt.preventDefault();
+              setUsername(tempUsername);
+              hide();
+            }}
+          >
             <input
               name="username"
               type="text"
@@ -80,17 +87,14 @@ const Modal: any = ({
             />
             <button
               style={{ backgroundColor: branding.palette.primary }}
-              onClick={evt => {
-                setUsername(tempUsername);
-                hide();
-              }}
+              type="submit"
             >
               Login
             </button>
             <div className="divisor">
               <span>OR</span>
             </div>
-          </div>
+          </form>
         )}
         {!username && <WalletButton />}
       </div>
