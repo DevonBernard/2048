@@ -55,6 +55,21 @@ const initialChallenges = {
   invisible: false,
 };
 
+const brands = {
+  xbox: {
+    imageUrl: '/images/xbox.png',
+    palette: {
+      primary: '#0e7a0d',
+    },
+  },
+  nintendo: {
+    imageUrl: '/images/nintendo.png',
+    palette: {
+      primary: '#fe171c',
+    },
+  },
+};
+
 export const GamePage: React.FC = () => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -71,6 +86,7 @@ export const GamePage: React.FC = () => {
     { [key: string]: boolean },
     any
   ] = useState(initialChallenges);
+  const branding = brands.xbox;
 
   useEffect(() => {
     if (publicKey || username) {
@@ -156,13 +172,18 @@ export const GamePage: React.FC = () => {
 
   return (
     <div>
-      <Header setShowModal={setShowModal} accountId={accountId} />
+      <Header
+        setShowModal={setShowModal}
+        accountId={accountId}
+        branding={branding}
+      />
       <Modal
         show={showModal}
         setShow={setShowModal}
         username={username}
         setUsername={setUsername}
         accountId={accountId}
+        branding={branding}
       />
       <Board
         requestNft={requestNft}

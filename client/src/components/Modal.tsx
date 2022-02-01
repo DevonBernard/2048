@@ -13,11 +13,13 @@ const Modal: any = ({
   setShow,
   username,
   setUsername,
+  branding,
 }: {
   show: boolean;
   setShow: any;
   username: string;
   setUsername: any;
+  branding: any;
 }) => {
   const [tempUsername, setTempUsername] = useState('');
   const [pw, setPw] = useState('');
@@ -45,10 +47,7 @@ const Modal: any = ({
         }}
       />
       <div className="overlay-card">
-        <img
-          src="http://logok.org/wp-content/uploads/2014/12/Xbox-logo.png"
-          className="logo"
-        />
+        <img src={branding.imageUrl} className="logo" />
         {username && (
           <button
             onClick={evt => {
@@ -80,6 +79,7 @@ const Modal: any = ({
               }}
             />
             <button
+              style={{ backgroundColor: branding.palette.primary }}
               onClick={evt => {
                 setUsername(tempUsername);
                 hide();

@@ -9,9 +9,11 @@ import { apiCall } from '../utils/network';
 const Header: any = ({
   setShowModal,
   accountId,
+  branding,
 }: {
   setShowModal: any;
   accountId: string;
+  branding: any;
 }) => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -36,11 +38,17 @@ const Header: any = ({
         <div>
           <div style={{ fontSize: 50, fontWeight: 'bold' }}>2048:FTX</div>
           <div className="header-buttons">
-            <button onClick={reset}>New game</button>
+            <button
+              onClick={reset}
+              style={{ backgroundColor: branding.palette.primary }}
+            >
+              New game
+            </button>
           </div>
         </div>
         <div className="account-info">
           <button
+            style={{ backgroundColor: branding.palette.primary }}
             onClick={evt => {
               setShowModal(true);
             }}
