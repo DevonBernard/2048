@@ -60,7 +60,10 @@ const Header: any = ({
               : 'Login / Register'}
           </button>
           <div className="header-scores">
-            <div className="header-scores-score">
+            <div
+              className="header-scores-score"
+              style={{ backgroundColor: branding.palette.primaryFaded }}
+            >
               <div>Score</div>
               <div>{score}</div>
               {!!scoreIncrease && (
@@ -69,7 +72,10 @@ const Header: any = ({
                 </div>
               )}
             </div>
-            <div className="header-scores-score">
+            <div
+              className="header-scores-score"
+              style={{ backgroundColor: branding.palette.primaryFaded }}
+            >
               <div>Best</div>
               <div>{best}</div>
             </div>

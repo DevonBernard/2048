@@ -60,12 +60,14 @@ const brands = {
     imageUrl: '/images/xbox.png',
     palette: {
       primary: '#0e7a0d',
+      primaryFaded: 'rgba(14, 122, 13, 0.5)',
     },
   },
   nintendo: {
     imageUrl: '/images/nintendo.png',
     palette: {
       primary: '#fe171c',
+      primaryFaded: 'rgb(254, 23, 28, 0.5)',
     },
   },
 };
