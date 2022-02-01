@@ -50,7 +50,7 @@ const Modal: any = ({
             src="http://logok.org/wp-content/uploads/2014/12/Xbox-logo.png"
             className="logo"
           />
-          {username ? (
+          {username && (
             <button
               onClick={evt => {
                 setUsername('');
@@ -59,7 +59,8 @@ const Modal: any = ({
             >
               Logout
             </button>
-          ) : (
+          )}
+          {!username && !publicKey && (
             <div className="overlay-center">
               <input
                 name="username"
@@ -90,9 +91,9 @@ const Modal: any = ({
               <div className="divisor">
                 <span>OR</span>
               </div>
-              <WalletButton />
             </div>
           )}
+          {!username && <WalletButton />}
         </div>
       </div>
     );
