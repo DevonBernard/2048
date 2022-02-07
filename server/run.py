@@ -128,6 +128,29 @@ def award_fungible():
 
     return transfer_fungible_resp_json
 
+
+@app.route('/fungibles/spend', methods=['POST'])
+def spend_fungible():
+    account_id = request.json['accountId']
+    amount = request.json['amount']
+
+    if account_id not in accounts:
+        return jsonify({'success':False, 'error': 'Account not found'}), 422
+
+    transfer_payload =     {
+        "email": _account_id_to_email(account_id),
+        "coin": "TILE",
+        "size": amount,
+        "reason": "Store purchase"
+    }
+    # print(f'{target}/users/{tenant}/transfer/from')
+    transfer_fungible_resp = requests.post(f'{target}/users/{tenant}/transfer/to', json=transfer_payload, headers=_create_header(tenant_auth_token))
+    transfer_fungible_resp_json = transfer_fungible_resp.json()
+    print(transfer_fungible_resp_json)
+
+    return transfer_fungible_resp_json
+
+
 # Get Fungibles in a user's wallet
 @app.route('/users/fungibles', methods=['GET'])
 def get_user_fungibles():
