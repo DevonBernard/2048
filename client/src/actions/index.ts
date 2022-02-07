@@ -9,6 +9,13 @@ export function resetAction(size = 4): ActionModel {
   };
 }
 
+export function clearAction(size = 4): ActionModel {
+  return {
+    type: ActionType.CLEAR,
+    value: size,
+  };
+}
+
 export function undoAction(): ActionModel {
   return {
     type: ActionType.UNDO,

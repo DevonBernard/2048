@@ -14,6 +14,7 @@ import Overlay from './Overlay';
 
 const Board: any = ({
   requestNft,
+  requestFungible,
   powerUps,
   ownedPowerUps,
   challenges,
@@ -21,6 +22,7 @@ const Board: any = ({
   accountId,
 }: {
   requestNft: any;
+  requestFungible: any;
   powerUps: any;
   ownedPowerUps: any;
   challenges: any;
@@ -204,6 +206,7 @@ const Board: any = ({
       ))}
       <Overlay
         requestNft={requestNft}
+        requestFungible={requestFungible}
         ownedPowerUps={ownedPowerUps}
         challenges={challenges}
         ownedChallenges={ownedChallenges}

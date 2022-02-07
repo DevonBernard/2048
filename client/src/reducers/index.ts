@@ -86,6 +86,18 @@ function applicationState(state = initialState, action: ActionModel) {
         newState.victoryDismissed = false;
       }
       break;
+    case ActionType.CLEAR:
+      {
+        const size = action.value || newState.boardSize;
+        const update = initializeBoard(size);
+        newState.boardSize = size;
+        newState.board = update.board;
+        newState.animations = update.animations;
+        newState.previousBoard = undefined;
+        newState.victory = false;
+        newState.victoryDismissed = false;
+      }
+      break;
     case ActionType.MOVE:
       {
         if (newState.defeat) {

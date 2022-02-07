@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useWallet } from '@solana/wallet-adapter-react';
+import classNames from 'classnames';
 
 import Header from '../components/Header';
 import Board from '../components/Board';
@@ -10,6 +11,7 @@ import BoardSizePicker from '../components/BoardSizePicker';
 import { PowerUp } from '../components/PowerUp';
 import Modal from '../components/Modal';
 import { setBestScore } from '../actions';
+import { clearAction, undoAction } from '../actions';
 
 const powerUpLibrary = {
   colors: [
@@ -71,6 +73,11 @@ const brands = {
     },
   },
 };
+
+const purchases = [
+  { title: 'CLEAR', price: 750, action: clearAction },
+  { title: 'UNDO', price: 200, action: undoAction },
+];
 
 const fungibleName = 'TILE';
 
@@ -204,6 +211,22 @@ export const GamePage: React.FC = () => {
     }
   };
 
+  const spendFungible = (amount: number) => {
+    if (accountId) {
+      apiCall('POST', '/fungibles/spend', {
+        accountId: accountId,
+        amount: amount,
+      }).then(awardResp => {
+        if (awardResp.respJson.success) {
+          const fungible = awardResp.respJson.result;
+          if (fungible.coin === fungibleName) {
+            setNumTile(numTile - fungible.size);
+          }
+        }
+      });
+    }
+  };
+
   return (
     <div>
       <Header
@@ -228,6 +251,34 @@ export const GamePage: React.FC = () => {
         accountId={accountId}
         requestFungible={requestFungible}
       />
+      <h2 style={{ marginBottom: 0, display: 'flex' }}>
+        Store
+        <span style={{ marginLeft: 'auto' }}>
+          {String(numTile).replace(/(.)(?=(\d{3})+$)/g, '$1,')} $TILE
+        </span>
+      </h2>
+      <div
+        className="store"
+        style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}
+      >
+        {purchases.map((purchase: any) => (
+          <div
+            key={purchase.title}
+            className={classNames('store-item', {
+              disabled: numTile < purchase.price,
+            })}
+            onClick={() => {
+              if (numTile > purchase.price) {
+                dispatch(purchase.action());
+                spendFungible(purchase.price);
+              }
+            }}
+          >
+            <div className="store-title">{purchase.title}</div>
+            <div className="store-price">{purchase.price} $TILE</div>
+          </div>
+        ))}
+      </div>
       {/* <BoardSizePicker /> */}
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
       <div style={{ display: 'flex', flexWrap: 'wrap', marginBottom: '3em' }}>

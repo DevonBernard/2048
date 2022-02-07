@@ -133,7 +133,36 @@ button {
   }
 }
 
-.powerup {
+.store {
+  .store-item {
+    align-items: stretch;
+    text-align: center;
+
+    &:hover {
+      background: rgba(#4e44ce, 0.5);
+    }
+
+    &.disabled {
+      border: rgba(0, 0, 0, 0.25);
+      background: rgba(0, 0, 0, 0.1);
+      cursor: not-allowed;
+    }
+
+    .store-title {
+      padding: 10px 30px;
+      font-size: 32px;
+      color: rgba(0, 0, 0, 0.8);
+      font-weight: bold;
+    }
+    .store-price {
+      padding: 10px 30px;
+      color: #000;
+    }
+  }
+}
+
+.powerup,
+.store-item {
   position: relative;
   display: flex;
   flex-direction: column;

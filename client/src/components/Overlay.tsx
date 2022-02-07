@@ -21,12 +21,14 @@ export const customConfetti = () => {
 
 const Overlay: any = ({
   requestNft,
+  requestFungible,
   ownedPowerUps,
   challenges,
   ownedChallenges,
   accountId,
 }: {
   requestNft: any;
+  requestFungible: any;
   ownedPowerUps: any;
   challenges: any;
   ownedChallenges: any;
@@ -68,6 +70,7 @@ const Overlay: any = ({
       apiCall('POST', '/highscores', { accountId: accountId, highScore: best });
     }
     dispatch(resetAction());
+    requestFungible(score);
   }, [dispatch, score, best]);
 
   const claimPrizeButton = (
