@@ -91,7 +91,7 @@ export const GamePage: React.FC = () => {
     useState(initialPowerUps);
   const [accountId, setAccountId] = useState('');
   const [username, setUsername] = useState('');
-  const [numTile, setNumTile] = useState(0);
+  const [numFungible, setNumFungible] = useState(0);
 
   const [challenges, setChallenges]: [any, any] = useState(initialChallenges);
   const [ownedChallenges, setOwnedChallenges]: [
@@ -140,7 +140,7 @@ export const GamePage: React.FC = () => {
                 if (fungibleResp.respJson.success) {
                   fungibleResp.respJson.result.forEach((fungible: any) => {
                     if (fungible.coin === fungibleName) {
-                      setNumTile(fungible.total);
+                      setNumFungible(fungible.total);
                     }
                   });
                 }
@@ -157,6 +157,7 @@ export const GamePage: React.FC = () => {
       setAccountId('');
       setNfts([]);
       setPowerUps({});
+      setNumFungible(0);
       setOwnedPowerups(initialPowerUps);
       setChallenges(initialChallenges);
       setOwnedChallenges(initialChallenges);
@@ -204,7 +205,7 @@ export const GamePage: React.FC = () => {
         if (awardResp.respJson.success) {
           const fungible = awardResp.respJson.result;
           if (fungible.coin === fungibleName) {
-            setNumTile(numTile + fungible.size);
+            setNumFungible(numFungible + fungible.size);
           }
         }
       });
@@ -220,7 +221,7 @@ export const GamePage: React.FC = () => {
         if (awardResp.respJson.success) {
           const fungible = awardResp.respJson.result;
           if (fungible.coin === fungibleName) {
-            setNumTile(numTile - fungible.size);
+            setNumFungible(numFungible - fungible.size);
           }
         }
       });
@@ -254,7 +255,8 @@ export const GamePage: React.FC = () => {
       <h2 style={{ marginBottom: 0, display: 'flex' }}>
         Store
         <span style={{ marginLeft: 'auto' }}>
-          {String(numTile).replace(/(.)(?=(\d{3})+$)/g, '$1,')} $TILE
+          {String(numFungible).replace(/(.)(?=(\d{3})+$)/g, '$1,')} $
+          {fungibleName}
         </span>
       </h2>
       <div
@@ -265,17 +267,19 @@ export const GamePage: React.FC = () => {
           <div
             key={purchase.title}
             className={classNames('store-item', {
-              disabled: numTile < purchase.price,
+              disabled: numFungible < purchase.price,
             })}
             onClick={() => {
-              if (numTile > purchase.price) {
+              if (numFungible > purchase.price) {
                 dispatch(purchase.action());
                 spendFungible(purchase.price);
               }
             }}
           >
             <div className="store-title">{purchase.title}</div>
-            <div className="store-price">{purchase.price} $TILE</div>
+            <div className="store-price">
+              {purchase.price} ${fungibleName}
+            </div>
           </div>
         ))}
       </div>
