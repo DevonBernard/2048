@@ -72,6 +72,8 @@ const brands = {
   },
 };
 
+const fungibleName = 'TILE';
+
 export const GamePage: React.FC = () => {
   const dispatch = useDispatch();
   const { publicKey } = useWallet();
@@ -82,6 +84,7 @@ export const GamePage: React.FC = () => {
     useState(initialPowerUps);
   const [accountId, setAccountId] = useState('');
   const [username, setUsername] = useState('');
+  const [numTile, setNumTile] = useState(0);
 
   const [challenges, setChallenges]: [any, any] = useState(initialChallenges);
   const [ownedChallenges, setOwnedChallenges]: [
@@ -120,6 +123,19 @@ export const GamePage: React.FC = () => {
                   });
                   setOwnedPowerups(newOwnedPowerUps);
                   setOwnedChallenges(newChallenges);
+                }
+              }
+            );
+
+            apiCall('GET', `/users/fungibles?accountId=${accountId}`).then(
+              (fungibleResp: any) => {
+                console.log('User Fungibles', fungibleResp);
+                if (fungibleResp.respJson.success) {
+                  fungibleResp.respJson.result.forEach((fungible: any) => {
+                    if (fungible.coin === fungibleName) {
+                      setNumTile(fungible.total);
+                    }
+                  });
                 }
               }
             );
@@ -172,6 +188,22 @@ export const GamePage: React.FC = () => {
     }
   };
 
+  const requestFungible = (amount: number, callback: any) => {
+    if (accountId) {
+      apiCall('POST', '/fungibles/award', {
+        accountId: accountId,
+        amount: amount,
+      }).then(awardResp => {
+        if (awardResp.respJson.success) {
+          const fungible = awardResp.respJson.result;
+          if (fungible.coin === fungibleName) {
+            setNumTile(numTile + fungible.size);
+          }
+        }
+      });
+    }
+  };
+
   return (
     <div>
       <Header
@@ -194,6 +226,7 @@ export const GamePage: React.FC = () => {
         challenges={challenges}
         ownedChallenges={ownedChallenges}
         accountId={accountId}
+        requestFungible={requestFungible}
       />
       {/* <BoardSizePicker /> */}
       <h2 style={{ marginBottom: 0 }}>Powerups</h2>
